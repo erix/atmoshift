@@ -40,7 +40,7 @@ bool ReadAtmo(int *command) {
 	int channels;
 	bool retval=false;
 
-	if (command == NULL) return;
+	if (command == NULL) return false;
 
 	buffer = Serial.read();
 	if(buffer==0xff)
@@ -64,7 +64,8 @@ bool ReadAtmo(int *command) {
 				retval=true;
 			}
 		}
-	}	
+	}
+	return retval;
 }
 
 // converts the RGB array to shiftbrite array
