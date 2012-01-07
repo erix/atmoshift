@@ -31,13 +31,14 @@ ShiftBrite sb(datapin, latchpin, enablepin, clockpin, NumLEDs);
 void setup()
 {
 	Serial.begin(38400);	
-	sb.sendColour(1023, 200, 0);
+	sb.sendColour(1023, 150, 0);
 }
 
 // reads the ATMO RGB array from serial
-void ReadAtmo(int *command) {
+bool ReadAtmo(int *command) {
 	int buffer=0;
 	int channels;
+	bool retval=false;
 
 	if (command == NULL) return;
 
@@ -60,6 +61,7 @@ void ReadAtmo(int *command) {
 					while(Serial.available()==0){ }
 					command[i]=Serial.read();
 				}
+				retval=true;
 			}
 		}
 	}	
@@ -82,9 +84,10 @@ void loop()
 
 	if(Serial.available()>0)
 	{
-		ReadAtmo(incomingatmo);
-		BuildLEDArray(incomingatmo);
-		sb.sendColour(LEDChannels);
+		if (ReadAtmo(incomingatmo)) {
+			BuildLEDArray(incomingatmo);
+			sb.sendColour(LEDChannels);
+		}
 	} 
 	else
 	{
